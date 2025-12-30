@@ -8,8 +8,14 @@ This repository contains the implementation of the CLEAR-HUG eSSL method. We wil
 
 ## Setup
 ### Environment
+Please install Torch first.
 ```
-conda env create -f environment.yml
+pip3 install --pre torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu126
+```
+```
+conda create -n clear_hug python=3.10
+conda activate clear_hug
+pip install -r requirements.txt
 ```
 ### Data preparation
 For both pretraining and downstream tasks, all data should be preprocessed into QRS tokens, which represent heartbeats in our paper.
