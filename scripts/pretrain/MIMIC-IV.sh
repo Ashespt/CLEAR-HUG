@@ -1,6 +1,6 @@
 OMP_NUM_THREADS=32 
-export CUDA_VISIBLE_DEVICES=0
-export NUM_GPU=1
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6
+export NUM_GPU=7
 torchrun --nnodes=1 --master_port 49209 --nproc_per_node=$NUM_GPU  run_clear_pretraining.py\
         --output_dir  checkpoint/MIMIC-IV \
         --log_dir  checkpoint/MIMIC-IV \
