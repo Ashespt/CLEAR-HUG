@@ -10,3 +10,5 @@ tornado==6.4.2
 tqdm==4.65.2
 transformers==4.40.1
 triton==2.3.0
+scipy==1.15.3
+
