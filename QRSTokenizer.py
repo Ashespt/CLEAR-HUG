@@ -430,28 +430,12 @@ def select_dataset(dataset_name):
         ]
         data_type = ["train", "val"]
 
-    elif dataset_name == "Zhongshan_pretrain":
-        data_category = [f'batch_{i}' for i in range(177)]
-        data_type = ["train", "val"]
-
-    elif dataset_name == "Zhongshan_pretrain_balanced":
-        data_category = [f'batch_{i}' for i in range(37)]
-        data_type = ["train", "val"]
-    
-    elif dataset_name == "Zhongshan_pretrain_balanced_add":
-        data_category = [f'batch_{i}' for i in range(64)]
-        data_type = ["train", "val"]
-
     elif dataset_name == "CSN":
         data_category = ["data"]
         data_type = ["train", "val", "test"]
 
     elif dataset_name == "CPSC2018":
         data_category = ["data"]
-        data_type = ["train", "val", "test"]
-
-    elif dataset_name == "ZhongShan_downstream":
-        data_category = ["subdiagnostic"]
         data_type = ["train", "val", "test"]
 
     else:
@@ -495,7 +479,7 @@ if __name__ == "__main__":
             data_path = (
                 f"./datasets/ecg_datasets/{dataset_name}/{category}/{type_}_data.npy"
             )
-            save_path = f"./datasets/ecg_datasets/{dataset_name}_QRS_{len(used_channels)}Leads_ours_mask_missuniform/{category}/"
+            save_path = f"./datasets/ecg_datasets/{dataset_name}_QRS/{category}/"
 
             if not os.path.exists(os.path.dirname(save_path)):
                 os.makedirs(os.path.dirname(save_path))
@@ -516,3 +500,4 @@ if __name__ == "__main__":
             )
 
             Tokenizer(data, plot=True)
+
