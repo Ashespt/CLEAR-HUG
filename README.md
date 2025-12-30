@@ -65,6 +65,7 @@ cp datasets/ecg_datasets/PTBXL/form/*labels* datasets/ecg_datasets/PTBXL_QRS/for
 We also provide the processed datasets (i.e., after QRS tokenization). If you have the appropriate data-use licenses, please contact us to request access to the processed data.
 
 ### Evaluation
+**Please find our pretrained CLEAR model [here](https://drive.google.com/file/d/1z00F_HRYx_NWzXN8rGRyPFmgLr2ZXC4O/view?usp=sharing).**
 To evaluate CLEAR on PTB-XL, run:
 ```
 bash scripts/finetune/PTBXL/12Leads/form/base_form_linear_prob_0.01.sh 
