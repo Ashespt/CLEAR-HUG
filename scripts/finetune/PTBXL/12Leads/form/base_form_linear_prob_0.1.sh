@@ -34,7 +34,7 @@ do
             --model CLEAR_finetune_base \
             --trainable linear \
             --split_ratio $ratio \
-            --finetune /cpfs01/projects-HDD/cfff-3782eb030d9c_HDD/public/code_ecg/released_ckpt.pth \
+            --finetune ./released_ckpt.pth \
             --sampling_method $method \
             --weight_decay 0.05 \
             --batch_size 256 \
@@ -71,7 +71,7 @@ do
             --log_dir log/finetune_test_ours_0.1/finetune_form_base_linear_${ratio}_${method} \
             --model CLEAR_finetune_base \
             --eval \
-            --trainable moe \
+            --trainable linear \
             --split_ratio $ratio \
             --sampling_method $method \
             --batch_size 256 \
