@@ -27,7 +27,7 @@ do
         rm -r checkpoints/finetune_ours_test_0.01/ptbxl/form/finetune_form_base_linear_${ratio}_${method}/ 
         echo "Running training with split_ratio: $ratio and sampling_method: $method on port: $PORT"
         torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
-            --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/form \
+            --dataset_dir datasets/ecg_datasets/PTBXL_QRS/form \
             --output_dir checkpoints/finetune_ours_test_0.01/ptbxl/form/finetune_form_base_linear_${ratio}_${method}/ \
             --log_dir checkpoints/finetune_ours_test_0.01/ptbxlfinetune_form_base_linear_${ratio}_${method} \
             --model CLEAR_finetune_base \
@@ -64,7 +64,7 @@ do
         PORT=$(generate_random_port)
         echo "Running testing with split_ratio: $ratio and sampling_method: $method on port: $PORT"
         torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
-            --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/form \
+            --dataset_dir datasets/ecg_datasets/PTBXL_QRS/form \
             --output_dir checkpoints/finetune_ours_test_0.01/ptbxl/form/finetune_form_base_linear_${ratio}_${method}/ \
             --log_dir log/finetune_test_ours_0.01/finetune_form_base_linear_${ratio}_${method} \
             --model CLEAR_finetune_base \
