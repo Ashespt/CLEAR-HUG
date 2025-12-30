@@ -21,7 +21,6 @@ generate_random_port() {
 
 # Train
 # 
-# /cpfs01/projects-HDD/cfff-3782eb030d9c_HDD/public/code_ecg/ECG_FOUND/CLEAR_ENCODER_CLS_MASK.pth \
 rm -r checkpoints/finetune_ours_test_0.01/ptbxl/sub/
 for ratio in "${split_ratios[@]}"
 do
@@ -32,11 +31,11 @@ do
         PORT=$(generate_random_port)
         echo "Running training with split_ratio: $ratio and sampling_method: $method on port: $PORT"
         torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
-            --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/subdiagnostic \
+            --dataset_dir datasets/ecg_datasets/PTBXL_QRS/subdiagnostic \
             --output_dir checkpoints/finetune_ours_test_0.01/ptbxl/sub/finetune_subdiagnostic_base_linear_${ratio}_${method}/ \
             --log_dir log/finetune_ours_test_0.01/sub/finetune_subdiagnostic_base_linear_${ratio}_${method} \
             --model CLEAR_finetune_base \
-            --finetune /cpfs01/projects-HDD/cfff-3782eb030d9c_HDD/public/code_ecg/SYX_Pretrain/ckp_0613_moe/checkpoints_beat_unique/woaug_6gpu/MIMIC-IV-test/checkpoint-120.pth \
+            --finetune ./released_ckpt.pth \
             --trainable linear \
             --split_ratio $ratio \
             --sampling_method $method \
@@ -70,7 +69,7 @@ do
         PORT=$(generate_random_port)
         echo "Running testing with split_ratio: $ratio and sampling_method: $method on port: $PORT"
         torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
-            --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/subdiagnostic \
+            --dataset_dir datasets/ecg_datasets/PTBXL_QRS/subdiagnostic \
             --output_dir checkpoints/finetune_ours_test_0.01/ptbxl/sub/finetune_subdiagnostic_base_linear_${ratio}_${method}/ \
             --log_dir log/finetune_ours_test_0.01/sub/finetune_subdiagnostic_base_linear_${ratio}_${method} \
             --model CLEAR_finetune_base \
