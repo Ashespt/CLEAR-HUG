@@ -31,7 +31,7 @@ do
             --output_dir checkpoints/finetune_ours_test_0.01/ptbxl/form/finetune_form_base_linear_${ratio}_${method}/ \
             --log_dir checkpoints/finetune_ours_test_0.01/ptbxlfinetune_form_base_linear_${ratio}_${method} \
             --model CLEAR_finetune_base \
-            --finetune /cpfs01/projects-HDD/cfff-3782eb030d9c_HDD/public/code_ecg/released_ckpt.pth \
+            --finetune ./released_ckpt.pth \
             --trainable linear \
             --split_ratio $ratio \
             --sampling_method $method \
