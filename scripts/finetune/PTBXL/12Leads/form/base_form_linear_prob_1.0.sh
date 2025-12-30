@@ -20,39 +20,39 @@ generate_random_port() {
 }
 # # Train
 # 
-# rm -r checkpoints/finetune_ours_test_1.0/ptbxl/form/
-# for ratio in "${split_ratios[@]}"
-# do
-#     for method in "${sampling_methods[@]}"
-#     do
-#         PORT=$(generate_random_port)
-#         echo "Running training with split_ratio: $ratio and sampling_method: $method on port: $PORT"
-#         torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
-#             --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/form \
-#             --output_dir checkpoints/finetune_ours_test_1.0/ptbxl/form/finetune_form_moe_base_linear_${ratio}_${method}/ \
-#             --log_dir checkpoints/finetune_ours_test_1.0/ptbxlfinetune_form_base_linear_${ratio}_${method} \
-#             --model CLEAR_HUG_finetune_base \
-#             --trainable moe \
-#             --split_ratio $ratio \
-#             --finetune /cpfs01/projects-HDD/cfff-3782eb030d9c_HDD/public/code_ecg/released_ckpt.pth \
-#             --sampling_method $method \
-#             --weight_decay 0.05 \
-#             --batch_size 256 \
-#             --lr 5e-3 \
-#             --update_freq 1 \
-#             --warmup_epochs 10 \
-#             --epochs 100 \
-#             --layer_decay 0.9 \
-#             --save_ckpt_freq 100 \
-#             --seed 100 \
-#             --is_binary \
-#             --nb_classes 19 \
-#             --world_size 1 \
-#             --atten_mask \
-#             --cls_token_num 12 \
-#             --mask_ratio 0
-#     done
-# done
+rm -r checkpoints/finetune_ours_test_1.0/ptbxl/form/
+for ratio in "${split_ratios[@]}"
+do
+    for method in "${sampling_methods[@]}"
+    do
+        PORT=$(generate_random_port)
+        echo "Running training with split_ratio: $ratio and sampling_method: $method on port: $PORT"
+        torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
+            --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/form \
+            --output_dir checkpoints/finetune_ours_test_1.0/ptbxl/form/finetune_form_moe_base_linear_${ratio}_${method}/ \
+            --log_dir checkpoints/finetune_ours_test_1.0/ptbxlfinetune_form_base_linear_${ratio}_${method} \
+            --model CLEAR_HUG_finetune_base \
+            --trainable moe \
+            --split_ratio $ratio \
+            --finetune ./released_ckpt.pth \
+            --sampling_method $method \
+            --weight_decay 0.05 \
+            --batch_size 256 \
+            --lr 5e-3 \
+            --update_freq 1 \
+            --warmup_epochs 10 \
+            --epochs 100 \
+            --layer_decay 0.9 \
+            --save_ckpt_freq 100 \
+            --seed 100 \
+            --is_binary \
+            --nb_classes 19 \
+            --world_size 1 \
+            --atten_mask \
+            --cls_token_num 12 \
+            --mask_ratio 0
+    done
+done
 
 # Test
 # --log_dir log/finetune_test_ours_1.0/finetune_form_base_linear_${ratio}_${method} \
