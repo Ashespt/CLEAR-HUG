@@ -17,39 +17,39 @@ generate_random_port() {
 }
 
 # Train
-# rm -r checkpoints/finetune_ours_test_1.0/ptbxl/rhythm/
-# for ratio in "${split_ratios[@]}"; do
+rm -r checkpoints/finetune_ours_test_1.0/ptbxl/rhythm/
+for ratio in "${split_ratios[@]}"; do
 
-#     for method in "${sampling_methods[@]}"; do
+    for method in "${sampling_methods[@]}"; do
 
-#         PORT=$(generate_random_port)
-#         echo "Running training with split_ratio: $ratio and sampling_method: $method on port: $PORT"
-#         torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
-#             --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/rhythm \
-#             --output_dir checkpoints/finetune_ours_test_1.0/ptbxl/rhythm/finetune_rhythm_base_linear_${ratio}_${method}/ \
-#             --log_dir log/finetune_ours_test_1.0/rhythm/finetune_rhythm_base_linear_${ratio}_${method} \
-#             --model CLEAR_finetune_base \
-#             --finetune /cpfs01/projects-HDD/cfff-3782eb030d9c_HDD/public/code_ecg/ECG_FOUND/CLEAR_ENCODER_CLS_MASK.pth \
-#             --trainable linear \
-#             --split_ratio $ratio \
-#             --sampling_method $method \
-#             --weight_decay 0.05 \
-#             --batch_size 256 \
-#             --lr 5e-3 \
-#             --update_freq 1 \
-#             --warmup_epochs 10 \
-#             --epochs 100 \
-#             --layer_decay 0.9 \
-#             --save_ckpt_freq 100 \
-#             --seed 0 \
-#             --is_binary \
-#             --nb_classes 12 \
-#             --world_size 1 \
-#             --atten_mask \
-#             --cls_token_num 12 \
-#             --mask_ratio 0
-#     done
-# done
+        PORT=$(generate_random_port)
+        echo "Running training with split_ratio: $ratio and sampling_method: $method on port: $PORT"
+        torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
+            --dataset_dir datasets/ecg_datasets/PTBXL_QRS/rhythm \
+            --output_dir checkpoints/finetune_ours_test_1.0/ptbxl/rhythm/finetune_rhythm_base_linear_${ratio}_${method}/ \
+            --log_dir log/finetune_ours_test_1.0/rhythm/finetune_rhythm_base_linear_${ratio}_${method} \
+            --model CLEAR_finetune_base \
+            --finetune ./released_ckpt.pth \
+            --trainable linear \
+            --split_ratio $ratio \
+            --sampling_method $method \
+            --weight_decay 0.05 \
+            --batch_size 256 \
+            --lr 5e-3 \
+            --update_freq 1 \
+            --warmup_epochs 10 \
+            --epochs 100 \
+            --layer_decay 0.9 \
+            --save_ckpt_freq 100 \
+            --seed 0 \
+            --is_binary \
+            --nb_classes 12 \
+            --world_size 1 \
+            --atten_mask \
+            --cls_token_num 12 \
+            --mask_ratio 0
+    done
+done
 
 # Test
 
@@ -61,7 +61,7 @@ for ratio in "${split_ratios[@]}"; do
         PORT=$(generate_random_port)
         echo "Running testing with split_ratio: $ratio and sampling_method: $method on port: $PORT"
         torchrun --nnodes=1 --master_port=$PORT --nproc_per_node=1 run_class_finetuning.py \
-            --dataset_dir datasets/ecg_datasets/PTBXL_QRS_12Leads_ours_mask_missuniform/rhythm \
+            --dataset_dir datasets/ecg_datasets/PTBXL_QRS/rhythm \
             --output_dir checkpoints/finetune_ours_test_1.0/ptbxl/rhythm/finetune_rhythm_base_linear_${ratio}_${method}/ \
             --log_dir log/finetune_ours_test_1.0/rhythm/finetune_rhythm_base_linear_${ratio}_${method} \
             --model CLEAR_finetune_base \
