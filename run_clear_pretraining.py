@@ -49,7 +49,7 @@ def get_args():
     # Model parameters
     parser.add_argument(
         "--model",
-        default="HeartLang",
+        default="CLEAR",
         type=str,
         metavar="MODEL",
         help="Name of model to train",
@@ -164,7 +164,7 @@ def get_args():
     )
     parser.add_argument("--seed", default=0, type=int)
     parser.add_argument("--resume", default="", help="resume from checkpoint")
-    parser.add_argument("--init_ckpt", default="", help="initialize from checkpoint")
+    parser.add_argument("--init_ckpt", default=None, help="initialize from checkpoint")
     parser.add_argument("--auto_resume", action="store_true")
     parser.add_argument("--padding_mask", action="store_true")
     parser.add_argument("--atten_mask", action="store_true")
@@ -209,8 +209,8 @@ def get_model(args):
                         cls_token_num=args.cls_token_num,
                         padding_mask=args.padding_mask,
                         atten_mask=args.atten_mask, 
-                        init_ckpt=args.init_ckpt if args.model == 'ECGFound2' else None,
-                        pretrained=(args.model == 'ECGFound2') )
+                        init_ckpt=args.init_ckpt,
+                        pretrained=False )
     return model
 
 
@@ -247,41 +247,6 @@ def main(args):
                 Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_7"),
             ]
         ]
-        
-    elif args.dataset_name == 'ZhongShan':
-        datasets_train = [[Path(f'./datasets/ecg_datasets/Zhongshan_pretrain_QRS_12Leads_ours_mask_missuniform/batch_{i}') for i in range(100)]]
-
-    elif args.dataset_name == 'ZhongShan_MIMIC-IV':
-        datasets_train = [
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_0"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_2"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_3"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_4"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_5"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_6"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_7"),
-            ]
-        for i in range(37):
-            datasets_train.append(Path(f'./datasets/ecg_datasets/Zhongshan_pretrain_balanced_QRS_12Leads_ours_mask_missuniform/batch_{i}'))
-        datasets_train = [datasets_train]
-    
-    elif args.dataset_name == 'ZhongShan_MIMIC-IV_add':
-        datasets_train = [
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_0"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_2"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_3"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_4"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_5"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_6"),
-                Path("./datasets/ecg_datasets/MIMIC-IV_QRS_12Leads_ours_mask_missuniform/batch_7"),
-            ]
-        for i in range(37):
-            datasets_train.append(Path(f'./datasets/ecg_datasets/Zhongshan_pretrain_balanced_QRS_12Leads_ours_mask_missuniform/batch_{i}'))
-
-        for i in range(64):
-            datasets_train.append(Path(f'./datasets/ecg_datasets/Zhongshan_pretrain_balanced_add_QRS_12Leads_ours_mask_missuniform/batch_{i}'))
-        datasets_train = [datasets_train]   
-
     else:
         raise TypeError('Not supported dataset!')
     
@@ -382,9 +347,6 @@ def main(args):
         loss_scaler=loss_scaler,
     )
 
-    if args.model == "ECGFound2":
-        freeze_except_prefix(model_without_ddp, "moe")
-
     print(f"Start training for {args.epochs} epochs")
     start_time = time.time()
 
@@ -444,3 +406,4 @@ if __name__ == "__main__":
     if opts.output_dir:
         Path(opts.output_dir).mkdir(parents=True, exist_ok=True)
     main(opts)
+
