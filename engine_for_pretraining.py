@@ -48,36 +48,6 @@ def data_aug(data):
         # data = -data
     return data
 
-def random_column_mixup(x, m=100, mix_col_num=8):
-    N, _, C = x.shape
-    assert x.shape[1] == 180 and C == 96
-    assert m <= N and mix_col_num <= 15
-
-    x = x.view(N, 12, 15, C)  # Reshape to [N, 12, 15, 96]
-    x_new = x.clone()
-
-    # 随机选取 m 个索引
-    selected_indices = random.sample(range(N), m)
-
-    for i in selected_indices:
-        # 随机选择另一个样本用于 mixup
-        candidates = list(range(N))
-        candidates.remove(i)
-        j = random.choice(candidates)
-
-        # 随机选择 mix_col_num 列（在 dim=2 上选）
-        mix_cols = random.sample(range(15), mix_col_num)
-
-        # 随机采样一个 lambda 值
-        lam = torch.rand(1).item()
-
-        # mixup 在每个选定列上的所有行（dim=1）执行
-        # x_new[i, :, mix_cols, :] = lam * x[i, :, mix_cols, :] + (1 - lam) * x[j, :, mix_cols, :]
-        # mixup 所有列
-        x_new[i,...] = lam * x[i,...] + (1 - lam) * x[j,...]
-
-    return x_new.view(N, 180, 96)
-
 def random_masking_attn_mask(x, mask_ratio,cls_token_num=1):
     N, L, D = x.shape
 
@@ -164,12 +134,6 @@ def train_one_epoch(model: torch.nn.Module,
 
             # samples [bs,seq_len,embed_dim]
             samples = batch[0]
-            if 'ECGFound2' in args.model:
-                samples_aug = data_aug(samples)
-                # samples = data_aug(samples)
-                samples_aug = samples_aug.float().to(device, non_blocking=True)
-            # samples = data_aug(random_column_mixup(samples))
-            # samples = random_column_mixup(samples)
             samples = samples.float().to(device, non_blocking=True)
             
             in_chan_matrix = batch[1].to(device, non_blocking=True)
@@ -188,14 +152,10 @@ def train_one_epoch(model: torch.nn.Module,
                     step + 1) % args.gradient_accumulation_steps != 0 else nullcontext
             with my_context():
                 with torch.cuda.amp.autocast():  # enabled=False
-                    if 'ECGFound2' in args.model:
-                        loss,_ = model(torch.concatenate([samples,samples_aug]), mask_bool_matrix=bool_masked_pos, in_chan_matrix=torch.concatenate([in_chan_matrix,in_chan_matrix]),
-                                    in_time_matrix=torch.concatenate([in_time_matrix,in_time_matrix]), key_padding_mask=in_pad_mask, return_qrs_tokens=False, \
-                                    return_all_tokens=False,attn_mask=attn_mask,criterion=loss_fn)
-                    else:
-                        loss,_ = model(samples, mask_bool_matrix=bool_masked_pos, in_chan_matrix=in_chan_matrix,
-                                    in_time_matrix=in_time_matrix, key_padding_mask=in_pad_mask, return_qrs_tokens=False, \
-                                    return_all_tokens=False,attn_mask=attn_mask,criterion=None)
+                    
+                    loss,_ = model(samples, mask_bool_matrix=bool_masked_pos, in_chan_matrix=in_chan_matrix,
+                                in_time_matrix=in_time_matrix, key_padding_mask=in_pad_mask, return_qrs_tokens=False, \
+                                return_all_tokens=False,attn_mask=attn_mask,criterion=None)
                 
             loss_value = loss.item()
 
@@ -254,3 +214,4 @@ def train_one_epoch(model: torch.nn.Module,
     metric_logger.synchronize_between_processes()
     print("Averaged stats:", metric_logger)
     return {k: meter.global_avg for k, meter in metric_logger.meters.items()}
+
