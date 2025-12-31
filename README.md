@@ -1,10 +1,14 @@
 # <img src="asset/HUGs.jpg" alt="hugs" width="35"> CLEAR-HUG 
 ## Tracing the Heart’s Pathways: ECG Representation Learning from a Cardiac Conduction Perspective
-This repository contains the implementation of the CLEAR-HUG eSSL method. We will release the pretraining code soon.
+This repository contains the implementation of the CLEAR-HUG eSSL method.
 <p align="center">
   <img src="asset/fig1.jpg" alt="A" width="45%">
   <img src="asset/method.jpg" alt="B" width="45%">
 </p>
+
+## :fire: Updates
+* **[Dec 2025]** We have released the evaluation code, and the pretraining code will be made available in January.
+* **[Nov 2025]** CLEAR-HUG has been accepted to AAAI 2026!
 
 ## Setup
 ### Environment
