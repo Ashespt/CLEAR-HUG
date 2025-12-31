@@ -192,7 +192,7 @@ class ECGFM(nn.Module):
         self.time_window = time_window
         self.mask_ratio = mask_ratio
         self.T = 0.07
-        self.stage = stage
+        self.stage = stage # stage 1: CLEAR stage 2: CLEAR+HUG
         self.token_embed = TokenEmbedding(c_in=time_window, d_model=embed_dim)
         self.cls_token_num = cls_token_num
         self.cls_token = nn.Parameter(torch.randn(self.cls_token_num,embed_dim))
@@ -226,7 +226,7 @@ class ECGFM(nn.Module):
             dropout=dropout,
         )
         self.decoder_embed = nn.Linear(embed_dim, decoder_embed_dim, bias=True)
-        if stage == 2:
+        if stage == 2: # HUG
             self.moe = HierarchicalMoE(input_dim=embed_dim)
         self.norm_layer = nn.LayerNorm(embed_dim)
         self.initialize_weights(decoder_embed_dim,time_window)
@@ -288,7 +288,7 @@ class ECGFM(nn.Module):
                 attn_mask[n, l_src + self.cls_token_num, self.cls_token_num:] = mask_line
         
         # mask = mask.repeat(N, 1)
-        attn_mask = attn_mask.repeat(N, 1, 1)
+        attn_mask = attn_mask.repeat(N, 1, 1) 
 
         # encoder cls mask
         numunmask_lead = (1-mask.reshape(1,self.cls_token_num,int(L/self.cls_token_num)).repeat((N,1,1))).sum(dim=-1)
@@ -298,9 +298,9 @@ class ECGFM(nn.Module):
             vec = torch.ones(len_keep+self.cls_token_num) # 1 not attend, 0 attend
             vec[int(numunmask_lead[0,:j].sum()):int(numunmask_lead[0,:(j+1)].sum())] = 0
             attn_mask_encoder[:,j,:] = vec
-
-        # return x_masked, ~attn_mask.to(torch.bool).cuda(), mask.repeat((N,1)), ids_restore.repeat((N,1)), attn_mask_encoder.cuda()
-        return x_masked, ~attn_mask.to(torch.bool).cuda(), mask, ids_restore.repeat((N,1)), None
+            
+        # mask for reconstruction loss, attn_mask_encoder for clear attention mask
+        return x_masked, ~attn_mask.to(torch.bool).cuda(), mask.repeat((N,1)), ids_restore.repeat((N,1)), attn_mask_encoder.cuda()
 
     def random_masking(self, x, mask_ratio):
         """
@@ -345,23 +345,13 @@ class ECGFM(nn.Module):
         x += self.pos_embed[:,self.cls_token_num:,:]
         
         x, attn_mask, mask, ids_restore, attn_mask_encoder = self.random_masking_atten(x, self.mask_ratio)
-        # else:
-        #     x, mask, ids_restore = self.random_masking_lead_and_token(x)
+
         cls_tokens = repeat(self.cls_token, "c d -> b c d", b=b)+ self.pos_embed[:, :self.cls_token_num, :]
         x, ps = pack([cls_tokens, x], "b * d")
-        
-
-        # if mask_bool_matrix is None:
-        #     mask_bool_matrix = torch.zeros((b, seq_len), dtype=torch.bool).to(x.device)
-
-        # mask_tokens = self.mask_token.expand(b, seq_len, -1)
-        # w = mask_bool_matrix.unsqueeze(-1).type_as(mask_tokens)
-        # x[:,self.cls_token_num:,:] = x[:,self.cls_token_num:,:] * (1 - w) + mask_tokens * w
-
-        # x = self.dropout(x)
+        # add pre-defined attention mask into transformer layers
         x = self.encoder_transformer(x,key_padding_mask=key_padding_mask,attn_mask=attn_mask_encoder)
         x = self.norm_layer(x)
-        if self.stage == 1:
+        if self.stage == 1: 
             return x, attn_mask, mask,ids_restore
         else:
             return x, None, None, None
@@ -385,20 +375,6 @@ class ECGFM(nn.Module):
         loss = loss.mean(dim=-1)  # [N, L], mean loss per patch
 
         loss = (loss * mask).sum() / mask.sum()  # mean loss on removed patches
-        return loss
-
-    def forward_loss_cl(self, output,criterion):
-        B = output.shape[0]
-        x,x1 = output[:B//2],output[B//2:]
-        sim = torch.einsum("nc,mc->nm", [x, x1])
-        l_pos = sim.diagonal()
-        # negative logits: NxK
-        mask = ~torch.eye(B//2, dtype=torch.bool)
-        l_neg = sim[mask].reshape(B//2, B//2 - 1)
-        logits = torch.cat([l_pos[:,None], l_neg], dim=1)
-        logits /= self.T
-        labels = torch.zeros(logits.shape[0], dtype=torch.long).cuda()
-        loss = criterion(logits, labels)
         return loss
 
     def forward(
@@ -429,9 +405,9 @@ class ECGFM(nn.Module):
         # x,mask = self.forward_feature(signals, mask_bool_matrix, key_padding_mask, in_chan_matrix, in_time_matrix,attn_mask) # bs, 192, 768
         if self.stage == 1:
             x,attn_mask,mask,ids_restore = self.forward_feature(signals, mask_bool_matrix, key_padding_mask, in_chan_matrix, in_time_matrix) # bs, 192, 768
-        else:
+        else: # stage 2 only used for downstream with CLEAR+HUG
             x,attn_mask,mask,ids_restore = self.forward_feature(signals, None, None, in_chan_matrix, in_time_matrix) # bs, 192, 768
-        if return_all_tokens and not visual:
+        if return_all_tokens and not visual: # for downstream
             if self.stage == 1:
                 return x,None
             else:
@@ -440,24 +416,13 @@ class ECGFM(nn.Module):
 
         if return_qrs_tokens:
             return x[:, self.cls_token_num:],None
+        # for pretraining
+        pred = self.forward_decoder(x,key_padding_mask,attn_mask,ids_restore,return_all_tokens=return_all_tokens)
+        if visual:
+            return pred,mask
+        loss_rec = self.forward_loss(signals,pred,mask)
+        return loss_rec,None
 
-        if self.stage == 1:
-            pred = self.forward_decoder(x,key_padding_mask,attn_mask,ids_restore,return_all_tokens=return_all_tokens)
-            if visual:
-                return pred,mask
-            loss_rec = self.forward_loss(signals,pred,mask)
-            return loss_rec,None
-        else:
-            B = x.shape[0]
-            # x[B//2:,:,:] = feature_aug(x[B//2:,:,:])
-            x[:B//2,:,:] = feature_aug(x[:B//2,:,:])
-            outputs = self.moe(x[:,:12,:]) # B, 7, 768
-            if visual:
-                return outputs, None
-            loss_cl = 0
-            for output in outputs:
-                loss_cl+= self.forward_loss_cl(output,criterion)
-            return loss_cl/7,None
 
 def get_model_default_params():
     return dict(
@@ -528,4 +493,5 @@ def CLEAR_large(pretrained=False, **kwargs):
         checkpoint = torch.load(kwargs["init_ckpt"], map_location="cpu")
         model.load_state_dict(checkpoint["model"])
     return model
+
 
