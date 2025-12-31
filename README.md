@@ -7,7 +7,7 @@ This repository contains the implementation of the CLEAR-HUG eSSL method.
 </p>
 
 ## :fire: Updates
-* **[Dec 2025]** We have released the evaluation code, and the pretraining code will be made available in January.
+* **[Dec 2025]** We have released the evaluation code, and the pretraining code will be made available in Jan 2026.
 * **[Nov 2025]** CLEAR-HUG has been accepted to AAAI 2026!
 
 ## Setup
