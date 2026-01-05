@@ -96,4 +96,14 @@ The evaluation scripts for the other datasets follow the same pattern.
 Coming soon.
 
 
+### BibTeX
+If you find this research useful, please consider citing:
+````BibTeX
+@article{pan2025tracing,
+  title={Tracing the Heart's Pathways: ECG Representation Learning from a Cardiac Conduction Perspective},
+  author={Pan, Tan and Sun, Yixuan and Jiang, Chen and Gao, Qiong and Sun, Rui and Zhang, Xingmeng and Yang, Zhenqi and Han, Limei and Liang, Yixiu and Cheng, Yuan and others},
+  journal={arXiv preprint arXiv:2512.24002},
+  year={2025}
+}
+````
 
