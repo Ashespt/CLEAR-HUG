@@ -1,5 +1,8 @@
 # <img src="asset/HUGs.jpg" alt="hugs" width="35"> CLEAR-HUG 
 ## Tracing the Heart’s Pathways: ECG Representation Learning from a Cardiac Conduction Perspective
+
+<a href='https://arxiv.org/pdf/2512.24002'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a >
+
 This repository contains the implementation of the CLEAR-HUG eSSL method.
 <p align="center">
   <img src="asset/fig1.jpg" alt="A" width="45%">
