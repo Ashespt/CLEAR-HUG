@@ -117,7 +117,7 @@ def load_dataset(path, sampling_rate, release=False):
     Y = pd.read_csv(path+'ptbxl_database.csv', index_col='ecg_id')
     Y.scp_codes = Y.scp_codes.apply(lambda x: ast.literal_eval(x))
     # Load raw signal data
-    X = load_raw_data_ptbxl(Y, sampling_rate, path)
+    X = load_raw_data_ptbxl(Y, sampling_rate, path) #Y.filename_lr is the file path
 
     return X, Y
 
@@ -233,13 +233,13 @@ def compute_label_aggregations(df, folder, ctype):
 
     return df
 
-def select_data(XX,YY, ctype, min_samples, outputfolder):
+def select_data(XX,YY, fpath, ctype, min_samples, outputfolder):
     # convert multilabel to multi-hot
     mlb = MultiLabelBinarizer()
-
     if ctype == 'diagnostic':
         X = XX[YY.diagnostic_len > 0]
         Y = YY[YY.diagnostic_len > 0]
+        P = fpath[YY.diagnostic_len > 0]
         mlb.fit(Y.diagnostic.values)
         y = mlb.transform(Y.diagnostic.values)
     elif ctype == 'subdiagnostic':
@@ -249,6 +249,7 @@ def select_data(XX,YY, ctype, min_samples, outputfolder):
         YY['subdiagnostic_len'] = YY.subdiagnostic.apply(lambda x: len(x))
         X = XX[YY.subdiagnostic_len > 0]
         Y = YY[YY.subdiagnostic_len > 0]
+        P = fpath[YY.subdiagnostic_len > 0]
         mlb.fit(Y.subdiagnostic.values)
         y = mlb.transform(Y.subdiagnostic.values)
     elif ctype == 'superdiagnostic':
@@ -258,6 +259,7 @@ def select_data(XX,YY, ctype, min_samples, outputfolder):
         YY['superdiagnostic_len'] = YY.superdiagnostic.apply(lambda x: len(x))
         X = XX[YY.superdiagnostic_len > 0]
         Y = YY[YY.superdiagnostic_len > 0]
+        P = fpath[YY.superdiagnostic_len > 0]
         mlb.fit(Y.superdiagnostic.values)
         y = mlb.transform(Y.superdiagnostic.values)
     elif ctype == 'form':
@@ -269,6 +271,7 @@ def select_data(XX,YY, ctype, min_samples, outputfolder):
         # select
         X = XX[YY.form_len > 0]
         Y = YY[YY.form_len > 0]
+        P = fpath[YY.form_len > 0]
         mlb.fit(Y.form.values)
         y = mlb.transform(Y.form.values)
     elif ctype == 'rhythm':
@@ -280,6 +283,7 @@ def select_data(XX,YY, ctype, min_samples, outputfolder):
         # select
         X = XX[YY.rhythm_len > 0]
         Y = YY[YY.rhythm_len > 0]
+        P = fpath[YY.rhythm_len > 0]
         mlb.fit(Y.rhythm.values)
         y = mlb.transform(Y.rhythm.values)
     elif ctype == 'all':
@@ -291,6 +295,7 @@ def select_data(XX,YY, ctype, min_samples, outputfolder):
         # select
         X = XX[YY.all_scp_len > 0]
         Y = YY[YY.all_scp_len > 0]
+        P = fpath[YY.all_scp_len > 0]
         mlb.fit(Y.all_scp.values)
         y = mlb.transform(Y.all_scp.values)
     else:
@@ -300,7 +305,7 @@ def select_data(XX,YY, ctype, min_samples, outputfolder):
     with open(outputfolder+'mlb.pkl', 'wb') as tokenizer:
         pickle.dump(mlb, tokenizer)
 
-    return X, Y, y, mlb
+    return X, Y, y, P, mlb
 
 def preprocess_signals(X_train, X_validation, X_test, outputfolder):
     standard_scaler_file = outputfolder+'standard_scaler.pkl'
