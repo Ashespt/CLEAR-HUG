@@ -126,8 +126,8 @@ class SCP_Experiment:
             self.X_test,
         )
         np.save(
-            self.outputfolder + self.experiment_name + "/data/val_path.npy",
-            self.p_train.filename_lr.tolist(),
+            self.outputfolder + self.experiment_name + "/data/test_path.npy",
+            self.p_test.filename_lr.tolist(),
         )
         
 
