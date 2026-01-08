@@ -45,7 +45,7 @@ python QRSTokenizer.py --dataset_name MIMIC-IV
   
 Following HeartLang, the preprocessing code for each dataset is located under datasets/dataset_preprocess/. For example, to generate all subset files for PTB-XL (corresponding to different sub-tasks), run:
 ```
-python datasets/dataset_preprocess/PTBXL/ecg_ptbxl_benchmarking/code/reproduce_results.py
+python datasets/dataset_preprocess/PTBXL/ecg_ptbxl_benchmarking/code/reproduce_results.py --datafolder 'Your/Data/Path'
 ```
 Then, restructure the generated files into the expected directory layout:
 ```
