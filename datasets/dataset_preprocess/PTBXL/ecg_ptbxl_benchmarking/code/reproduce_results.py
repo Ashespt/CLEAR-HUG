@@ -1,14 +1,11 @@
 from experiments.scp_experiment import SCP_Experiment
-# from utils.utils import utils
-
-# model configs
 from configs.fastai_configs import *
 from configs.wavelet_configs import *
 
 
-def main():
+def main(args):
 
-    datafolder = "path/to/ptb-xl-a-large-publicly-available-electrocardiography-dataset-1.0.3/"
+    datafolder = args.datafolder
     datafolder_icbeb = "../data/ICBEB/"
     outputfolder = "datasets/ecg_datasets/PTBXL/"
 
@@ -21,19 +18,6 @@ def main():
         conf_fastai_inception1d,
         conf_wavelet_standard_nn,
     ]
-
-    ##########################################
-    # STANDARD SCP EXPERIMENTS ON PTBXL
-    ##########################################
-
-    # experiments = [
-    #     ('exp1', 'diagnostic'),
-    #     ('exp0', 'all'),
-    #     ('exp1.1', 'subdiagnostic'),
-    #     ('exp1.1.1', 'superdiagnostic'),
-    #     ('exp2', 'form'),
-    #     ('exp3', 'rhythm')
-    #    ]
 
     experiments = [
         ("diagnostic", "diagnostic"),
@@ -48,24 +32,11 @@ def main():
         print(f"========task: {task}========")
         e = SCP_Experiment(name, task, datafolder, outputfolder, models)
         e.prepare()
-        # e.perform()
-        # e.evaluate()
-
-    # generate greate summary table
-    # utils.generate_ptbxl_summary_table()
-
-    ##########################################
-    # EXPERIMENT BASED ICBEB DATA
-    ##########################################
-
-    # e = SCP_Experiment('exp_ICBEB', 'all', datafolder_icbeb, outputfolder, models)
-    # e.prepare()
-    # e.perform()
-    # e.evaluate()
-
-    # # generate greate summary table
-    # utils.ICBEBE_table()
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser("preprocess", add_help=False)
+    parser.add_argument("--datafolder", default='datasets/PTB-XL/', type=str)
+    args = parser.parse_args()
+    main(args)
