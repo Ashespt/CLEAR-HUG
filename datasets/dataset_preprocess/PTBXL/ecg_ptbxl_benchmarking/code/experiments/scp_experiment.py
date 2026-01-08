@@ -62,26 +62,29 @@ class SCP_Experiment:
         self.labels = utils.compute_label_aggregations(
             self.raw_labels, self.datafolder, self.task
         )
-
         # Select relevant data and convert to one-hot
-        self.data, self.labels, self.Y, _ = utils.select_data(
+        self.data, self.labels, self.Y, self.P,  _ = utils.select_data(
             self.data,
             self.labels,
+            self.raw_labels,
             self.task,
             self.min_samples,
             self.outputfolder + self.experiment_name + "/data/",
         )
+        
         self.input_shape = self.data[0].shape
-
         # 10th fold for testing (9th for now)
         self.X_test = self.data[self.labels.strat_fold == self.test_fold]
         self.y_test = self.Y[self.labels.strat_fold == self.test_fold]
+        self.p_test = self.P[self.labels.strat_fold == self.test_fold]
         # 9th fold for validation (8th for now)
         self.X_val = self.data[self.labels.strat_fold == self.val_fold]
         self.y_val = self.Y[self.labels.strat_fold == self.val_fold]
+        self.p_val = self.P[self.labels.strat_fold == self.val_fold]
         # rest for training
         self.X_train = self.data[self.labels.strat_fold <= self.train_fold]
         self.y_train = self.Y[self.labels.strat_fold <= self.train_fold]
+        self.p_train = self.P[self.labels.strat_fold <= self.train_fold]
 
         print(self.y_train.shape)
         print(self.y_val.shape)
@@ -106,13 +109,27 @@ class SCP_Experiment:
             self.X_train,
         )
         np.save(
+            self.outputfolder + self.experiment_name + "/data/train_path.npy",
+            self.p_train.filename_lr.tolist(),
+        )
+        np.save(
             self.outputfolder + self.experiment_name + "/data/val_data.npy",
             self.X_val,
         )
         np.save(
+            self.outputfolder + self.experiment_name + "/data/val_path.npy",
+            self.p_val.filename_lr.tolist(),
+        )
+        
+        np.save(
             self.outputfolder + self.experiment_name + "/data/test_data.npy",
             self.X_test,
         )
+        np.save(
+            self.outputfolder + self.experiment_name + "/data/val_path.npy",
+            self.p_train.filename_lr.tolist(),
+        )
+        
 
         # save train and test labels
         np.save(
@@ -127,6 +144,8 @@ class SCP_Experiment:
             self.outputfolder + self.experiment_name + "/data/test_labels.npy",
             self.y_test,
         )
+
+
 
         # modelname = 'naive'
         # # create most naive predictions via simple mean in training
