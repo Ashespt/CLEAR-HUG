@@ -13,7 +13,8 @@ triton==2.3.0
 scipy==1.15.3
 pyhealth==1.1.6
 numpy==2.2.5
-pandas==2.3.3
 wfdb==4.3.0
+pandas==2.2.3
 python-multipart==0.0.21
+
 
