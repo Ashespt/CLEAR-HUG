@@ -13,12 +13,9 @@ This repository contains the implementation of the CLEAR-HUG eSSL method.
 
 ## Setup
 ### Environment
-Please install Torch first.
-```
-pip3 install --pre torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu126
-```
 ```
 conda create -n clear_hug python=3.10
+pip3 install --pre torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu126
 conda activate clear_hug
 pip install -r requirements.txt
 ```
