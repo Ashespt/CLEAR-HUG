@@ -96,6 +96,8 @@ The evaluation scripts for the other datasets follow the same pattern.
 ```
 bash scripts/pretrain/MIMIC-IV.sh
 ```
+### End-to-end inference
+We present a demo of the end-to-end inference process, where the ECG signal serves as the input, and the classification result is the output.
 
 ### BibTeX
 If you find this research useful, please consider citing:
