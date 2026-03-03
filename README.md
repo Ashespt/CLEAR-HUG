@@ -8,8 +8,9 @@ This repository contains the implementation of the CLEAR-HUG eSSL method.
 </p>
 
 ## :fire: Updates
-* **[Dec 2025]** We have released the evaluation code, and the pretraining code will be made available in Jan 2026.
-* **[Nov 2025]** CLEAR-HUG has been accepted to AAAI 2026!
+* **[Mar. 2026]** We have released the pre-training code, and the end-to-end code (from single ecg signal to the classification result) will be made available in Apr. 2026.
+* **[Dec. 2025]** We have released the evaluation code, and the pretraining code will be made available in Jan 2026.
+* **[Nov. 2025]** CLEAR-HUG has been accepted to AAAI 2026!
 
 ## Setup
 ### Environment
@@ -91,8 +92,10 @@ bash scripts/finetune/PTBXL/12Leads/form/base_form_linear_prob_1.0.sh
 The evaluation scripts for the other datasets follow the same pattern.
 
 ### Pretraining
-Coming soon.
 
+```
+bash scripts/pretrain/MIMIC-IV.sh
+```
 
 ### BibTeX
 If you find this research useful, please consider citing:
