@@ -8,7 +8,7 @@ This repository contains the implementation of the CLEAR-HUG eSSL method.
 </p>
 
 ## :fire: Updates
-* **[Mar. 2026]** We have released the pre-training code, and the end-to-end code (from single ecg signal to the classification result) will be made available in Apr. 2026.
+* **[Mar. 2026]** We have released the pre-training code and the end-to-end code (from a single ecg signal to the classification result).
 * **[Dec. 2025]** We have released the evaluation code, and the pretraining code will be made available in Jan 2026.
 * **[Nov. 2025]** CLEAR-HUG has been accepted to AAAI 2026!
 
@@ -62,7 +62,7 @@ datasets/
 	├── ...
 	├── superdiagnostic/
 ```
-Then, you need to run QRSTokenizer.py to generate QRS tokens from the PTX-XL datasaet:
+Then, you need to run QRSTokenizer.py to generate QRS tokens from the PTX-XL dataset:
 ```
 python QRSTokenizer.py --dataset_name PTBXL
 ```
@@ -98,6 +98,18 @@ bash scripts/pretrain/MIMIC-IV.sh
 ```
 ### End-to-end inference
 We present a demo of the end-to-end inference process, where the ECG signal serves as the input, and the classification result is the output.
+
+Please replace the following Variables in the infer.py
+```
+num_cls: the number of classes
+tmp_path_hea: the path of the signal
+checkpoint_path: the checkpoint of downstream tasks
+model_name: aligned with the fine-tuned model, ['CLEAR_finetune_base', 'CLEAR_HUG_finetune_base']
+```
+Then,
+```
+python infer.py
+```
 
 ### BibTeX
 If you find this research useful, please consider citing:
