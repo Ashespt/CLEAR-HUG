@@ -8,7 +8,7 @@ This repository contains the implementation of the CLEAR-HUG eSSL method.
 </p>
 
 ## :fire: Updates
-* **[Mar. 2026]** We have released the pre-training code and the end-to-end code (from a single ecg signal to the classification result).
+* **[Mar. 2026]** We have released the pre-training code and the end-to-end inference code (from a single ecg signal to the classification result).
 * **[Dec. 2025]** We have released the evaluation code, and the pretraining code will be made available in Jan 2026.
 * **[Nov. 2025]** CLEAR-HUG has been accepted to AAAI 2026!
 
