@@ -114,11 +114,14 @@ python infer.py
 ### BibTeX
 If you find this research useful, please consider citing:
 ````BibTeX
-@article{pan2025tracing,
-  title={Tracing the Heart's Pathways: ECG Representation Learning from a Cardiac Conduction Perspective},
+@inproceedings{pan2026tracing,
+  title={Tracing the Heart’s Pathways: ECG Representation Learning from a Cardiac Conduction Perspective},
   author={Pan, Tan and Sun, Yixuan and Jiang, Chen and Gao, Qiong and Sun, Rui and Zhang, Xingmeng and Yang, Zhenqi and Han, Limei and Liang, Yixiu and Cheng, Yuan and others},
-  journal={arXiv preprint arXiv:2512.24002},
-  year={2025}
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={40},
+  number={2},
+  pages={890--898},
+  year={2026}
 }
 ````
 
