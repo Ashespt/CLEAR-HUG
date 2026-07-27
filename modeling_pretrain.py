@@ -246,6 +246,33 @@ class ECGFM(nn.Module):
     def random_masking_atten(self, x, mask_ratio):
         N, L, D = x.shape
 
+        if mask_ratio == 0:
+            mask = torch.zeros(
+                N, L,
+                dtype=torch.bool,
+                device=x.device,
+            )
+    
+            ids_restore = torch.arange(
+                L,
+                device=x.device,
+            ).unsqueeze(0).repeat(N, 1)
+    
+            attn_mask_encoder = self.build_unmasked_attention_mask(
+                batch_size=N,
+                seq_len=L,
+                device=x.device,
+            )
+    
+            return (
+                x,                   
+                None,
+                mask,
+                ids_restore,
+                attn_mask_encoder,
+            )
+            
+
         num_tokens_plead = L//self.cls_token_num
 
         assert num_tokens_plead * self.cls_token_num == L
