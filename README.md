@@ -129,3 +129,14 @@ If you find this research useful, please consider citing:
 }
 ````
 
+### License
+
+This code is licensed under the PolyForm Noncommercial License 1.0.0.
+See the LICENSE file for the full terms.
+
+Noncommercial use, modification, and redistribution are permitted
+subject to the license terms.
+
+For commercial licensing inquiries, please contact:
+[pant23@m.fudan.edu.cn,sunyx23@m.fudan.edu.cn]
+
