@@ -12,6 +12,8 @@ transformers==4.40.1
 triton==2.3.0
 scipy==1.15.3
 pyhealth==1.1.6
+torch_ecg==0.0.31
+peakutils==1.3.5
 numpy==2.2.5
 wfdb==4.3.0
 pandas==2.2.3
