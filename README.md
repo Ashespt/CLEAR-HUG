@@ -8,7 +8,7 @@ This repository contains the implementation of the CLEAR-HUG eSSL method.
 </p>
 
 ## :fire: Updates
-* **[Apr. 2026]** We will release the end-to-end feature extraction code (from a single ECG signal to 12-lead features).
+* **[Oct. 2026]** Please note that we have updated the released checkpoint and fine-tuning code. Please use our latest checkpoint to reproduce the results.
 * **[Mar. 2026]** We have released the pre-training code and the end-to-end inference code (from a single ECG signal to the classification result).
 * **[Dec. 2025]** We have released the evaluation code, and the pretraining code will be made available in Jan 2026.
 * **[Nov. 2025]** CLEAR-HUG has been accepted to AAAI 2026!
@@ -75,7 +75,7 @@ cp datasets/ecg_datasets/PTBXL/form/*labels* datasets/ecg_datasets/PTBXL_QRS/for
 We also provide the processed datasets (i.e., after QRS tokenization). If you have the appropriate data-use licenses, please contact us to request access to the processed data.
 
 ### Evaluation
-**Please find our pretrained CLEAR model [here](https://drive.google.com/file/d/1z00F_HRYx_NWzXN8rGRyPFmgLr2ZXC4O/view?usp=sharing).**
+**Please find our pretrained CLEAR model [here](https://drive.google.com/file/d/1GtIOTkkPb8xSpj4NI_Db1-4BC9WaNRTO/view?usp=sharing).**
 To evaluate CLEAR on PTB-XL, run:
 ```
 bash scripts/finetune/PTBXL/12Leads/form/base_form_linear_prob_0.01.sh 
