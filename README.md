@@ -9,7 +9,7 @@ This repository contains the implementation of the CLEAR-HUG eSSL method.
 
 ## :fire: Updates
 * **[Oct. 2026]**
- 1. Please note that we have updated the released checkpoint and fine-tuning code. Please use our latest checkpoint to reproduce the results.
+ 1. Please note that we have updated the released checkpoint ([here](https://drive.google.com/file/d/1GtIOTkkPb8xSpj4NI_Db1-4BC9WaNRTO/view?usp=sharing)) and fine-tuning code. Please use our latest checkpoint and code to reproduce the results.
  2. We have uploaded the processed downstream datasets. ([here](https://drive.google.com/file/d/1G9vu8whWo8vxYNsmwTPMEXwWKCr0lgKl/view?usp=sharing)).
 * **[Mar. 2026]** We have released the pre-training code and the end-to-end inference code (from a single ECG signal to the classification result).
 * **[Dec. 2025]** We have released the evaluation code, and the pretraining code will be made available in Jan 2026.
