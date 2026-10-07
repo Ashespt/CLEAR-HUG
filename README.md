@@ -74,7 +74,7 @@ Next, you need to manually copy and paste the label files into the corresponding
 cp datasets/ecg_datasets/PTBXL/form/*labels* datasets/ecg_datasets/PTBXL_QRS/form
 ```
  
-We also provide the processed datasets (i.e., after QRS tokenization). If you have the appropriate data-use licenses, please contact us to request access to the processed data.
+We also provide the processed datasets (i.e., after QRS tokenization).([here](https://drive.google.com/file/d/1G9vu8whWo8vxYNsmwTPMEXwWKCr0lgKl/view?usp=sharing)).
 
 ### Evaluation
 **Please find our pretrained CLEAR model [here](https://drive.google.com/file/d/1GtIOTkkPb8xSpj4NI_Db1-4BC9WaNRTO/view?usp=sharing).**
