@@ -4,7 +4,6 @@ from timm.models import register_model
 from torch import nn
 from modeling_pretrain import ECGFM
 import torch.nn.functional as F
-from utils.moe import HierarchicalMoE
 
 class WeightedSum(nn.Module):
     def __init__(self,input_dim =768):
@@ -53,7 +52,8 @@ class ECGFMClassifier(nn.Module):
             padding_mask=padding_mask,
             attn_mask=attn_mask,
             mask_ratio=mask_ratio,
-            stage=stage
+            stage=stage,
+            downstream=True
         )
         self.stage = stage
         self.depth = depth
@@ -62,10 +62,6 @@ class ECGFMClassifier(nn.Module):
             self.mlp_head = nn.Linear(embed_dim, num_classes)
         else:
             self.mlp_head = nn.Linear(embed_dim, num_classes)
-            # self.mlp_head = nn.Linear(embed_dim, num_classes)
-            # self.weight_sum = WeightedSum()
-        # for i in range(self.depth):
-        #     self.backbone.transformer.layers[i][0].adapter = FFTAdapter(768)
 
     def forward(
         self, x, in_chan_matrix=None, in_time_matrix=None, return_all_tokens=True,key_padding_mask=None,attn_mask=None,visual=False,visual_group=False
